@@ -46,7 +46,7 @@ class DBWNode(object):
         max_lat_accel = rospy.get_param('~max_lat_accel', 3.)
         max_steer_angle = rospy.get_param('~max_steer_angle', 8.)
         #I added min_speed here extra to video but hardcoded else where so I put it here as a variable to be reset if needed
-        min_speed = 0.1 # 10 #0.1
+        min_speed =  0.1 # 10 #0.1
 
         self.steer_pub = rospy.Publisher('/vehicle/steering_cmd',
                                          SteeringCmd, queue_size=1)
@@ -59,7 +59,8 @@ class DBWNode(object):
         # self.controller = Controller(<Arguments you wish to provide>)
         # i missed this got error evenutally about controller
         # all atribute from above
-        self.controller = Controller( vehicle_mass = vehicle_mass ,
+        '''
+        self.controller = Controller( vehicle_mass = vehicle_mass , # i thkn i am not using kwargs correctly https://pythontips.com/2013/08/04/args-and-kwargs-in-python-explained/
                                         fuel_capacity = fuel_capacity ,
                                         brake_deadband = brake_deadband ,
                                         decel_limit = decel_limit ,
@@ -70,18 +71,44 @@ class DBWNode(object):
                                         max_lat_accel =  max_lat_accel ,
                                         max_steer_angle = max_steer_angle,
                                         min_speed = min_speed)# I added min_speed here was hardcoced in video as 0.1
+       
+        self.controller = Controller( vehicle_mass = 'vehicle_mass' ,
+                                        fuel_capacity = 'fuel_capacity' ,
+                                        brake_deadband = 'brake_deadband' ,
+                                        decel_limit = 'decel_limit' ,
+                                        accel_limit =  'accel_limit' ,
+                                        wheel_radius = 'wheel_radius' ,
+                                        wheel_base = 'wheel_base' ,
+                                        steer_ratio = 'steer_ratio' ,
+                                        max_lat_accel =  'max_lat_accel' ,
+                                        max_steer_angle = 'max_steer_angle',
+                                        min_speed = 'min_speed')
+        '''
+        #another attempt around **kwargs##belwo seems to work
+        self.controller = Controller( vehicle_mass  ,
+                                        fuel_capacity ,
+                                        brake_deadband ,
+                                        decel_limit  ,
+                                        accel_limit  ,
+                                        wheel_radius ,
+                                        wheel_base  ,
+                                        steer_ratio ,
+                                        max_lat_accel ,
+                                        max_steer_angle,
+                                        min_speed )
+        
 
         # TODO: Subscribe to all the topics you need to
         #from Q+A
-        rospy.Subscriber('/vehicle/dbw_enabled',Bool,self.dbw_enabled_cb)
+        rospy.Subscriber('/vehicle/dbw_enabled',Bool,self.dbw_enabled_cb)#turning off for a test
         rospy.Subscriber('/twist_cmd',TwistStamped,self.twist_cb)
         rospy.Subscriber('/current_velocity', TwistStamped, self.velocity_cb)
         
         self.current_vel = None
         self.current_ang_vel = None
-        self.dbw_enabled = None
+        self.dbw_enabled =  False # False # None # should this be false?
         self.linear_vel = None
-        self.angular_vel = None
+        self.angular_vel =  None
         self.throttle = self.steering = self.brake = 0
         
 
@@ -97,14 +124,20 @@ class DBWNode(object):
                                                                                self.dbw_enabled,
                                                                                self.linear_vel,
                                                                                self.angular_vel)
-            
+                
+                #self.throttle = 1# testing to see it is executing in here and it is
+                #self.brake =  0
+                #self.steering = 0.5#this much worked..test
+          
             #throttle, brake, steering = self.controller.control(<proposed linear velocity>,
             #                                                     <proposed angular velocity>,
             #                                                     <current linear velocity>,
             #                                                     <dbw status>,
             #                                                     <any other argument you need>)
-            if self.dbw_enabled == True : #was this in video <dbw is enabled>:
+            #self.dbw_enabled =  False #True# a test It does seem to go in here and execute
+            if self.dbw_enabled : # changed== True : #was this in video <dbw is enabled>:
               self.publish(self.throttle, self.brake, self.steering)
+              #self.publish(1,0,0)#this much worked..test
             rate.sleep()
 
     def dbw_enabled_cb(self,msg):#from Q+A
@@ -113,6 +146,7 @@ class DBWNode(object):
     def twist_cb(self,msg):# from Q+A
         self.linear_vel = msg.twist.linear.x
         self.angular_vel = msg.twist.angular.z # had a typo here
+        
     
     def velocity_cb(self,msg):#from Q+A
         self.current_vel =  msg.twist.linear.x

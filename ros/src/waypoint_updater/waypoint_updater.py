@@ -4,6 +4,7 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
 from scipy.spatial import KDTree
+from std_msgs.msg import Int32, Bool #forgot to add this to understand the imformationcoming into ie ints and bools
 
 import math
 
@@ -25,7 +26,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 200 # Number of waypoints we will publish. You can change this number
+LOOKAHEAD_WPS = 20 # Number of waypoints we will publish. You can change this number
 
 
 class WaypointUpdater(object):
@@ -38,9 +39,9 @@ class WaypointUpdater(object):
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
 
-        self.final_waypoints_pub = rospy.Publisher('final_waypoints', Lane, queue_size=1)
+        self.final_waypoints_pub        = rospy.Publisher('final_waypoints', Lane, queue_size=1)
 
-        # TODO: Add other member variables you need below
+        #  d other member variables you need below
         self.pose = None
         self.base_waypoints =  None
         self.waypoints_2d = None
@@ -93,12 +94,13 @@ class WaypointUpdater(object):
         lane = Lane()
         lane.header = self.base_waypoints.header
         lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
+        #lane.waypoints = self.base_waypoints.waypoints[1: LOOKAHEAD_WPS] # a test
         self.final_waypoints_pub.publish(lane)
         
     def pose_cb(self, msg):
         # TODO: Implement
-        self.pose = msg
-        pass
+        self.pose = msg #.pose # I had only msg here!!
+        #pass # i had not removed this might have been a problem
 
     def waypoints_cb(self, waypoints):
         # TODO: Implement
@@ -106,7 +108,7 @@ class WaypointUpdater(object):
         if not self.waypoints_2d:
             self.waypoints_2d = [ [ waypoint.pose.pose.position.x , waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints ]
             self.waypoint_tree = KDTree(self.waypoints_2d)
-      #  pass left this in by mistake still gives tutle not integre error here
+      #  pass #left this in by mistake still gives tutle not integre error here
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
