@@ -228,7 +228,8 @@ bool PurePursuit::interpolateNextTarget(int next_waypoint, geometry_msgs::Point 
     }
   }
 }
-
+// Done: IF changed the below finction to always return FALSE in order to make the node constanly update
+// The idea was suggested in the DBW walkthrough video but the code is mine....JR
 bool PurePursuit::verifyFollowing() const
 {
   double a = 0;
@@ -241,7 +242,9 @@ bool PurePursuit::verifyFollowing() const
   if (displacement < displacement_threshold_ && relative_angle < relative_angle_threshold_)
   {
     // ROS_INFO("Following : True");
-    return true;
+    //return true;//the easiest way to make it always return FALSE....
+    // TODO: Improve this as now the function is not needed at all?
+    return false;
   }
   else
   {
