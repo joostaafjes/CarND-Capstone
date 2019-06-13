@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# the change includes parameters added line30-34, line49,line97-143
 import rospy
 from geometry_msgs.msg import PoseStamped
 from styx_msgs.msg import Lane, Waypoint
@@ -27,8 +27,11 @@ TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
 LOOKAHEAD_WPS = 20 # Number of waypoints we will publish. You can change this number
-
-
+STOP_LINE_MARGIN = 4
+MAX_DECEL = 0.5
+CONSTANT_DECEL = 1
+#PUBLISHING_RATE = 20  # Rate (Hz) of waypoint publishing
+#LOGGING_THROTTLE_FACTOR = PUBLISHING_RATE * 2  # Only log at this rate (1 / Hz)
 class WaypointUpdater(object):
     def __init__(self):
         rospy.init_node('waypoint_updater')
@@ -43,6 +46,7 @@ class WaypointUpdater(object):
 
         #  d other member variables you need below
         self.pose = None
+        self.stopline_wp_idx = -1
         self.base_waypoints =  None
         self.waypoints_2d = None
         self.waypoint_tree = None
@@ -55,7 +59,7 @@ class WaypointUpdater(object):
             if self.pose and self.base_waypoints:
                 #Get closest waypoint
                 closest_waypoint_idx = self.get_closest_waypoint_idx()#I had idx here error? put x back in as video had it
-                self.publish_waypoints(closest_waypoint_idx)
+                self.publish_waypoints()# this causes error as we go to Complete Waypoint updater we don't need to pass closest waypoint here the generate_lane fiunction does this now (closest_waypoint_idx)
             rate.sleep()
         
 
@@ -90,13 +94,54 @@ class WaypointUpdater(object):
             
         return closest_idx
         
-    def publish_waypoints(self,closest_idx):#added self here after error message also closest)idx
-        lane = Lane()
-        lane.header = self.base_waypoints.header
-        lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
+    def publish_waypoints(self):#added self here after error message also closest)idx
+        final_lane = self.generate_lane()
+        # lane.header = self.base_waypoints.header
+        # lane.waypoints = self.base_waypoints.waypoints[closest_idx:closest_idx + LOOKAHEAD_WPS]
         #lane.waypoints = self.base_waypoints.waypoints[1: LOOKAHEAD_WPS] # a test
-        self.final_waypoints_pub.publish(lane)
-        
+        self.final_waypoints_pub.publish(final_lane)
+
+    def generate_lane(self):
+        lane = Lane()
+        lane.header = self.base_waypoints.header #moved from previous section to here
+        closest_idx = self.get_closest_waypoint_idx()
+        farthest_idx = closest_idx + LOOKAHEAD_WPS
+        base_waypoints = self.base_waypoints.waypoints[closest_idx:farthest_idx]
+        #to determine if need to decelerate, need to verify in simulator
+        if (self.stopline_wp_idx == -1) or (self.stopline_wp_idx >= farthest_idx):
+            lane.waypoints = base_waypoints
+        else:
+            lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+
+        return lane
+
+    def decelerate_waypoints(self, waypoints, closest_idx):
+        temp = []
+        for i, wp in enumerate(waypoints):
+
+            p = Waypoint()
+            p.pose = wp.pose
+
+            # Distance includes a number of waypoints back so front of car stops at line
+            stop_idx = max(self.stopline_wp_idx - closest_idx - STOP_LINE_MARGIN, 0)
+            dist = self.distance(waypoints, i, stop_idx)
+            vel = math.sqrt(2 * MAX_DECEL * dist) + (i * CONSTANT_DECEL)
+		   #or try the other way as below
+		   #vel = math.sqrt(2 * MAX_DECEL * dist)
+            if vel < 1.0:
+                vel = 0.0
+
+            p.twist.twist.linear.x = min(vel, wp.twist.twist.linear.x)
+            temp.append(p)
+        #not sure if the part below is useful, need to verify
+        # self.decelerate_count += 1
+        # if (self.decelerate_count % LOGGING_THROTTLE_FACTOR) == 0:
+            # size = len(waypoints) - 1
+            # vel_start = temp[0].twist.twist.linear.x
+            # vel_end = temp[size].twist.twist.linear.x
+            # rospy.logwarn("DECEL: vel[0]={:.2f}, vel[{}]={:.2f}".format(vel_start, size, vel_end))
+        return temp       
+
     def pose_cb(self, msg):
         # TODO: Implement
         self.pose = msg #.pose # I had only msg here!!
