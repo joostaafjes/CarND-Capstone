@@ -11,7 +11,9 @@ import tf
 import cv2
 import yaml
 
-STATE_COUNT_THRESHOLD = 3
+from scipy.spatial import KDTree#added for KDtree same as waypoint_updater
+
+STATE_COUNT_THRESHOLD = 1# 0 zero here made no difference # 3 test simulator may not work on normal values here??
 
 class TLDetector(object):
     def __init__(self):
@@ -22,6 +24,10 @@ class TLDetector(object):
         self.camera_image = None
         self.lights = []
 
+        #from waypoint_updater to make similar KDtree
+        self.waypoints_2d = None
+        self.waypoint_tree = None
+        
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
 
@@ -56,6 +62,12 @@ class TLDetector(object):
 
     def waypoints_cb(self, waypoints):
         self.waypoints = waypoints
+        #next lines from waypoint_updater for similar KDtree
+        if not self.waypoints_2d:
+            self.waypoints_2d = [ [ waypoint.pose.pose.position.x , waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints ]
+            self.waypoint_tree = KDTree(self.waypoints_2d)
+        #experiment to avoid image_cb...failed
+        #light_wp, state = self.process_traffic_lights()
 
     def traffic_cb(self, msg):
         self.lights = msg.lights

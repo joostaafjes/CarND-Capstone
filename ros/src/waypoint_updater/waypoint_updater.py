@@ -38,6 +38,10 @@ class WaypointUpdater(object):
 
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
+        #by John : the value self.stopline_wp_idx was not getting updated therefore the condtions in generate_lane were never met to decelerate the waypoints.
+        # the below subscrtiption to the traffic_light node should update the stopline_wp_idx and allow the decellerate to happend
+        #also the fraffic call back needs to be adjusted to generate the call back for the subscription
+        rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb) #from /ros/src/tl_detector/tl_detector.py
 
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
@@ -46,7 +50,7 @@ class WaypointUpdater(object):
 
         #  d other member variables you need below
         self.pose = None
-        self.stopline_wp_idx = -1
+        self.stopline_wp_idx = -1 # goes for a while and stops OK with 500 here 500 #-1 #experiment to hard setting to see where problem is which node...
         self.base_waypoints =  None
         self.waypoints_2d = None
         self.waypoint_tree = None
@@ -58,7 +62,8 @@ class WaypointUpdater(object):
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
                 #Get closest waypoint
-                closest_waypoint_idx = self.get_closest_waypoint_idx()#I had idx here error? put x back in as video had it
+                #below lineno longer needed ? John
+                #closest_waypoint_idx = self.get_closest_waypoint_idx()#I had idx here error? put x back in as video had it
                 self.publish_waypoints()# this causes error as we go to Complete Waypoint updater we don't need to pass closest waypoint here the generate_lane fiunction does this now (closest_waypoint_idx)
             rate.sleep()
         
@@ -108,6 +113,9 @@ class WaypointUpdater(object):
         farthest_idx = closest_idx + LOOKAHEAD_WPS
         base_waypoints = self.base_waypoints.waypoints[closest_idx:farthest_idx]
         #to determine if need to decelerate, need to verify in simulator
+        #testing what happens without if statement maybe stopline the problem
+        # test interesting car stayed forzen swithed to manual drove it a little enaged auto and it stoped so the deceleration part works but not being trigger so problems must be around stopline_wp_idx or fartest_idx
+        #lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
         if (self.stopline_wp_idx == -1) or (self.stopline_wp_idx >= farthest_idx):
             lane.waypoints = base_waypoints
         else:
@@ -157,7 +165,9 @@ class WaypointUpdater(object):
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
-        pass
+        # pass
+        #From John next line added to get a value for self.stopline_wp_idx from /traffic_waypoint 
+        self.stopline_wp_idx = msg.data
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later
