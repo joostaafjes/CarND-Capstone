@@ -37,7 +37,7 @@ class Controller(object):
         ki = 1.0 #0.1#0.5#1.0#0.1 #0.5 #0.4 # 0.1 # had k1 here mistake
         kd = 1.0# 0.0# 0.5# 1.0#0.1# 0.5 #0.5# 0.1 # 0.1 # 0. # ?? this is how it is in Q+A
         mn = 0#0.01 # 0. # Minimum throttle value ### ?? this is how it is in Q+A
-        mx = 0.2 # Maximum throttle value
+        mx = 1.0#was 0.2 # Maximum throttle value
         #self.throttle_controller = PID(kp, ki, mn, mx)
         self.throttle_controller = PID(kp, ki,kd, mn, mx)#kd was missing....
         # I am going to commment the LPF out as it may be casueing trouble 
