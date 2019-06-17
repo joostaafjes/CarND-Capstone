@@ -13,7 +13,7 @@ import yaml
 
 from scipy.spatial import KDTree#added for KDtree same as waypoint_updater
 
-STATE_COUNT_THRESHOLD = 1# 0 zero here made no difference # 3 test simulator may not work on normal values here??
+STATE_COUNT_THRESHOLD = 3# lower number did not imporve performace 1# 0 zero here made no difference # 3 test simulator may not work on normal values here??
 
 class TLDetector(object):
     def __init__(self):

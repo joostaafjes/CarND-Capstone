@@ -115,7 +115,7 @@ class DBWNode(object):
         self.loop()
 
     def loop(self):
-        rate = rospy.Rate(10) # small difference at 10# 20 made no apparent difference #original value 50 I am trying to fix the passing the green dots problem by adjusting this rate# 50Hz
+        rate = rospy.Rate(50) # maybe small difference at 10# 20 made no apparent difference #original value 50 I am trying to fix the passing the green dots problem by adjusting this rate# 50Hz
         while not rospy.is_shutdown():
             # TODO: Get predicted throttle, brake, and steering using `twist_controller`
             # You should only publish the control commands if dbw is enabled

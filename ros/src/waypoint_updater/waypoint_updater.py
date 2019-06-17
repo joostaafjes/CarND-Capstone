@@ -58,7 +58,7 @@ class WaypointUpdater(object):
         self.loop()
         
     def loop(self):
-        rate = rospy.Rate(10)# at 10 no obvious difference maybe a little better# 50 original value # again trying to deal with the probelm of leaving the green dots behind I am experiemnting with the refresh rate in DBW_node and here
+        rate = rospy.Rate(50)# at 10 no obvious difference maybe a little better# 50 original value # again trying to deal with the probelm of leaving the green dots behind I am experiemnting with the refresh rate in DBW_node and here
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
                 #Get closest waypoint
