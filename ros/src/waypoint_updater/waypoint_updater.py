@@ -26,7 +26,7 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 20 # Number of waypoints we will publish. You can change this number
+LOOKAHEAD_WPS = 30# 10 made no imporvement in green dot issue 10 # 20 # Number of waypoints we will publish. You can change this number
 STOP_LINE_MARGIN = 4
 MAX_DECEL = 0.5
 CONSTANT_DECEL = 1
@@ -58,7 +58,7 @@ class WaypointUpdater(object):
         self.loop()
         
     def loop(self):
-        rate = rospy.Rate(50)
+        rate = rospy.Rate(10)# at 10 no obvious difference maybe a little better# 50 original value # again trying to deal with the probelm of leaving the green dots behind I am experiemnting with the refresh rate in DBW_node and here
         while not rospy.is_shutdown():
             if self.pose and self.base_waypoints:
                 #Get closest waypoint

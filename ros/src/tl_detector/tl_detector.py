@@ -59,6 +59,19 @@ class TLDetector(object):
 
     def pose_cb(self, msg):
         self.pose = msg
+          #another expeirment moved from below to allow camera to be turned off
+        light_wp, state = self.process_traffic_lights()
+        if self.state != state:
+            self.state_count = 0
+            self.state = state
+        elif self.state_count >= STATE_COUNT_THRESHOLD:
+            self.last_state = self.state
+            light_wp = light_wp if state == TrafficLight.RED else -1
+            self.last_wp = light_wp
+            self.upcoming_red_light_pub.publish(Int32(light_wp))
+        else:
+            self.upcoming_red_light_pub.publish(Int32(self.last_wp))
+        self.state_count += 1
 
     def waypoints_cb(self, waypoints):
         self.waypoints = waypoints
@@ -68,6 +81,8 @@ class TLDetector(object):
             self.waypoint_tree = KDTree(self.waypoints_2d)
         #experiment to avoid image_cb...failed
         #light_wp, state = self.process_traffic_lights()
+      
+        
 
     def traffic_cb(self, msg):
         self.lights = msg.lights

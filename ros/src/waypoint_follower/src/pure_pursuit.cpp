@@ -29,8 +29,9 @@
 */
 
 #include "pure_pursuit_core.h"
-
-constexpr int LOOP_RATE = 30; //processing frequency
+// this rate and the DBW node are potential what we need to adjust to stop the car passing out the green dots
+// this did not make any noticeable difference going back to orignal value might come back to this
+constexpr int LOOP_RATE = 30 ; // I tried 15 ; // 30 was original value 30; //processing frequency
 
 
 int main(int argc, char **argv)
