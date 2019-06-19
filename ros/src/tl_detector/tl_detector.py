@@ -10,6 +10,7 @@ from light_classification.tl_classifier import TLClassifier
 import tf
 import cv2
 import yaml
+import numpy as np
 
 STATE_COUNT_THRESHOLD = 3
 
@@ -100,8 +101,17 @@ class TLDetector(object):
             int: index of the closest waypoint in self.waypoints
 
         """
-        #TODO implement
-        return 0
+
+        closest_index = 0
+        closest_distance = float('inf')
+        for i in range(len(self.waypoints)):
+            waypoint_position = self.waypoints[i].pose.position
+            distance = compute_distance(pose.position, waypoint_position)
+            if (distance < closest_distance):
+                closest_index = i
+                closest_distance = distance
+
+        return closest_index
 
     def get_light_state(self, light):
         """Determines the current color of the traffic light
@@ -145,6 +155,9 @@ class TLDetector(object):
             return light_wp, state
         self.waypoints = None
         return -1, TrafficLight.UNKNOWN
+
+def compute_distance(p1, p2):
+    return np.linalg.norm([p2.x-p1.x, p2.y-p1.y])
 
 if __name__ == '__main__':
     try:
