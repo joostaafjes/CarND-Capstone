@@ -11,7 +11,13 @@ import tf
 import cv2
 import yaml
 
+import os #for time stamp 
+import calendar #for time stamp 
+import time #for time stamp 
+
 from scipy.spatial import KDTree#added for KDtree same as waypoint_updater
+# added for KDtree part in looking forward
+import numpy as np
 
 STATE_COUNT_THRESHOLD = 3# lower number did not imporve performace 1# 0 zero here made no difference # 3 test simulator may not work on normal values here??
 
@@ -27,6 +33,10 @@ class TLDetector(object):
         #from waypoint_updater to make similar KDtree
         self.waypoints_2d = None
         self.waypoint_tree = None
+        # John two variables added to sample frame rate every so many frames to help reduce lag when cmera on
+        # thgis experiemnt did not work well
+        self.count = 0
+        self.frame_sample_rate = 1 #counting from 0 3 will give one in 4 frames from camera stream 
         
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
@@ -59,7 +69,10 @@ class TLDetector(object):
 
     def pose_cb(self, msg):
         self.pose = msg
-          #another expeirment moved from below to allow camera to be turned off
+        #another expeirment moved from below to allow camera to be turned off
+        # this works the cars slows and stops fine at the traffic lights without processing the images in the image callback
+        # this is ON for testing OFF for final version
+        
         light_wp, state = self.process_traffic_lights()
         if self.state != state:
             self.state_count = 0
@@ -72,6 +85,7 @@ class TLDetector(object):
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
         self.state_count += 1
+        
 
     def waypoints_cb(self, waypoints):
         self.waypoints = waypoints
@@ -95,6 +109,13 @@ class TLDetector(object):
             msg (Image): image from car-mounted camera
 
         """
+        #added by John to sample only every X images ....failed experiment going back to throttle limit to slow car
+        #if self.count < self.frame_sample_rate :
+        #    self.count += 1
+        #    return #less than the count increment and return ship the rest of the function
+        #elif self.count == self.frame_sample_rate :
+        #    self.count = 0 #reset the counter and continue
+        #END of JOHN's addition
         self.has_image = True
         self.camera_image = msg
         light_wp, state = self.process_traffic_lights()
@@ -128,7 +149,24 @@ class TLDetector(object):
 
         """
         #TODO implement
-        closest_idx = self.waypoint_tree.query([x,y], 1 )[1]
+        #todo more... I think this needs more to make it closest waypoint AHEAD of car as there is a possibility if returnsing the traffic lights behind the car.....on second thoughts that might not be needed....made no difference to "site" 
+       
+        closest_idx =  self.waypoint_tree.query([x,y], 1 )[1] # was ([x,y], 1 )[1] see below 
+       
+        # I am going to copy this into tl_detector which is already slecting nearest waypoint but not nessecarily ahead waypoint might be causeing problems...John
+        closest_coord = self.waypoints_2d[closest_idx]
+        prev_coord = self.waypoints_2d[closest_idx -  1]
+        
+        #Equation of hyperplane through closest_coords
+        cl_vect = np.array(closest_coord)
+        prev_vect = np.array(prev_coord)
+        pos_vect = np.array([x,y])
+        
+        val = np.dot(cl_vect - prev_vect , pos_vect - cl_vect )
+        
+        if val > 0:
+            closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
+        
         return closest_idx #0
 
     def get_light_state(self, light):
@@ -154,6 +192,21 @@ class TLDetector(object):
         #Get classification
         return self.light_classifier.get_classification(cv_image)
         '''
+
+   #experiment to create trining images
+#this works and will be used if we want full screen images from the simulator
+    def create_training_data(self, state):
+        f_name = "sim_tl_{}_{}.jpg".format(calendar.timegm(time.gmtime()), state) # self.light_label(state))
+        dir = './data/train/sim'
+
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+
+        cv_image = self.bridge.imgmsg_to_cv2(self.camera_image)
+        cv_image = cv_image[:, :, ::-1]
+        cv2.imwrite('{}/{}'.format(dir, f_name), cv_image)
+        
+    
     def process_traffic_lights(self):
         """Finds closest visible traffic light, if one exists, and determines its
             location and color
@@ -163,6 +216,7 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
+       
         # from Walkthrough video
         closest_light = None
         line_wp_idx = None                       
@@ -188,6 +242,10 @@ class TLDetector(object):
         
         if closest_light:
             state = self.get_light_state(closest_light)
+             #experiment to create test images from https://github.com/swap1712/carnd-capstone/blob/master/ros/src/tl_detector/tl_detector.py
+            #this exerpiemnt to create traiing data works and might be used if we need it
+            self.create_training_data(state)
+        
             return line_wp_idx, state
         return -1, Traffic_Light.UNKNOWN
         # below Original and  not in Walkthrough video

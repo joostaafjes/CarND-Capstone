@@ -84,6 +84,7 @@ class WaypointUpdater(object):
         #from scipy website https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.KDTree.query.html
         # usage KDTree.query(x, k=1, eps=0, p=2, distance_upper_bound=inf)[source]
         #check if closest is ahead or behind vehicle
+        # I am going to copy this into tl_detector which is already slecting nearest waypoint but not nessecarily ahead waypoint might be causeing problems...John
         closest_coord = self.waypoints_2d[closest_idx]
         prev_coord = self.waypoints_2d[closest_idx -  1]
         
