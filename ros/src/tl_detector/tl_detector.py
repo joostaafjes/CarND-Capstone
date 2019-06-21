@@ -180,9 +180,9 @@ class TLDetector(object):
 
         """
         #For testing just return the light state
-        return light.state #swtiching to our classifier
+        #return light.state #swtiching to our classifier
         #original below for hen using classifier
-        '''
+        
         if(not self.has_image):
             self.prev_light_loc = None
             return False
@@ -191,7 +191,7 @@ class TLDetector(object):
 
         #Get classification
         return self.light_classifier.get_classification(cv_image)# Joosts is different name ...I copied it into our
-        '''# returning this to something that works
+        # returning this to something that works
 
    #experiment to create trining images
 #this works and will be used if we want full screen images from the simulator

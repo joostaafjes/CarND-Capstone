@@ -1,3 +1,4 @@
+
 from styx_msgs.msg import TrafficLight
 
 # removed all Joosts LENEt style code
@@ -21,4 +22,5 @@ class TLClassifier(object):
         """
         #TODO implement light color prediction
         return TrafficLight.UNKNOWN
-
+   
+ 
