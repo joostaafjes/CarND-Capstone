@@ -11,7 +11,10 @@ class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
        # pass
-        self.class_model = load_model('model'+ '/model.h5')
+        #class_model = load_model('model'+ '/model.h5')#Joosts # maybe self was probelm Joosts did not have self
+        #self.class_model = load_model('model/model.h5')
+        #self.class_model = load_model('/model/model.h5')
+        class_model = load_model('/model.h5')
 
     def get_classification(self, image_name): # image): #changed for Joost code
         """Determines the color of the traffic light in the image
@@ -30,7 +33,7 @@ class TLClassifier(object):
         img = load_img(image_name, False, target_size=(32, 32), color_mode='rgb')
         x = img_to_array(img)
         x = np.expand_dims(x, axis=0)
-        preds = class_model.predict_classes(x)
+        preds = class_model.predict_classes(x)# I added self then removed it
         #prob = class_model.predict_proba(x) #do we need this? I think state 3 threshold os enough ? John
         #print(preds, prob)
         
