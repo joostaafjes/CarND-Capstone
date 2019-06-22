@@ -20,7 +20,7 @@ class ColorClassifier:
 
         return preds[0], prob[0]
 
-    def predict_images(self, images):#: list):
+    def predict_images(self,  images ): #: list):
         predictions = []
         for image in images:
             pred, prob = self.predict_image(image)

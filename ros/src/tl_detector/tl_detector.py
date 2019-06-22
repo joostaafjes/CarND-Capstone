@@ -72,7 +72,7 @@ class TLDetector(object):
         #another expeirment moved from below to allow camera to be turned off
         # this works the cars slows and stops fine at the traffic lights without processing the images in the image callback
         # this is ON for testing OFF for final version
-        
+        '''
         light_wp, state = self.process_traffic_lights()
         if self.state != state:
             self.state_count = 0
@@ -85,6 +85,7 @@ class TLDetector(object):
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
         self.state_count += 1
+        '''
         
 
     def waypoints_cb(self, waypoints):
