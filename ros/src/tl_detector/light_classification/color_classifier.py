@@ -6,10 +6,16 @@ import numpy as np
 from PIL import Image, ImageOps
 from styx_msgs.msg import TrafficLight
 
+import os
+
 class ColorClassifier:
     def __init__(self):
+        module_directory = os.path.dirname(__file__)
+        model_path = os.path.join(module_directory, 'models/model.h5')
+
+
         self.IMAGE_SIZE = 32
-        self.class_model = load_model('models'+ '/model.h5')
+        self.class_model = load_model(model_path)
 
     def predict_image(self, image):
         x = self.crop_image(image)
