@@ -18,7 +18,9 @@ class ObjectClassifier:
         with self.detection_graph.as_default():
             od_graph_def = tf.GraphDef()
             try:
-                with tf.gfile.GFile('models/frozen_inference_graph.pb', 'rb') as fid:
+                module_directory = os.path.dirname(__file__)
+                model_path = os.path.join(module_directory, 'models/frozen_inference_graph.pb')
+                with tf.gfile.GFile(model_path, 'rb') as fid:
                     serialized_graph = fid.read()
                     od_graph_def.ParseFromString(serialized_graph)
                     tf.import_graph_def(od_graph_def, name='')
