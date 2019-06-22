@@ -1,4 +1,4 @@
-from typing import overload
+#from typing import overload #new version of python?
 
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array, load_img
@@ -20,7 +20,7 @@ class ColorClassifier:
 
         return preds[0], prob[0]
 
-    def predict_images(self, images: list):
+    def predict_images(self, images):#: list):
         predictions = []
         for image in images:
             pred, prob = self.predict_image(image)
