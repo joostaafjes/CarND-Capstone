@@ -11,6 +11,7 @@
  Adam Gotlib | gotlib.adam@gmail.com> | https://github.com/Goldob | https://www.linkedin.com/in/adam-gotlib/ |
 
 
+![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
 
 ### -----------------------------------------
 ### Original Udacity README.MD below
