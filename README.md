@@ -21,7 +21,7 @@ and finally get to run our code on Udacity's famous Self Driving Car *"Carla"*.
 
 ## Project Overview
 
-![Overview](README_IMAGES/final-project-ros-graph-v2.png?raw=true "Project Overview")
+![Overview](README_IMAGES/final-project-ros-graph-v2.PNG?raw=true "Project Overview")
 
 
 
