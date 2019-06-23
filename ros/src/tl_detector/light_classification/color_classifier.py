@@ -2,6 +2,7 @@ from keras.models import load_model
 from keras.preprocessing.image import img_to_array, load_img
 import numpy as np
 from PIL import Image, ImageOps
+import os
 # from styx_msgs.msg import TrafficLight
 # for testing
 
@@ -16,7 +17,8 @@ class TrafficLight(Enum):
 class ColorClassifier:
     def __init__(self):
         self.IMAGE_SIZE = 32
-        self.class_model = load_model('models'+ '/model.h5')
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        self.class_model = load_model(cwd + 'models'+ '/model.h5')
 
     def predict_image(self, image):
         x = self.crop_image(image)
