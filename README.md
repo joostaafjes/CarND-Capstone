@@ -1,14 +1,14 @@
- # 					Udacity Self-Driving Car Nanodegree
+#                  Udacity Self-Driving Car Nanodegree
  
-#			Capstone Project: Programming a Real Self-Driving Car
+#            Capstone Project: Programming a Real Self-Driving Car
  
  
- This is the final "Capstone" Project for the entire 9 month Nanodegree course.
+This is the final "Capstone" Project for the entire 9 month Nanodegree course.
 We utilize Robot Operating System (ROS) and Autoware libraries test our coe in a simulated environment and finally get to run our code on Udacity's famous Self Driving Car "Carla".
 ![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
-###			 This is our project submission 
-###						 and
-###				We are Team AJJAX !
+###           This is our project submission
+
+###                We are Team AJJAX !
 
  Name|Email|GitHub|LinkedIn
  -----------|---------------------------|-------------------------------|------------------------------------------------|
