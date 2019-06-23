@@ -1,10 +1,12 @@
- < align="center"> # Udacity Self-Driving Car Nanodegree
+ < align="center">
+ # Udacity Self-Driving Car Nanodegree
  
-  < align="center"> # Capstone Project: Programming a Real Self-Driving Car
+ # Capstone Project: Programming a Real Self-Driving Car
  
  ![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
  
- < align="center"> ### We are Team AJJAX !
+ ### We are Team AJJAX !
+ < /align="center">
  Name|Email|GitHub|LinkedIn
  -----------|---------------------------|-------------------------------|------------------------------------------------|
  John Reilly| johnreillymct@outlook.com | https://github.com/john-reilly|https://www.linkedin.com/in/john-reilly-ireland/|
