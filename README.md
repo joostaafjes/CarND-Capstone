@@ -1,17 +1,20 @@
- ## Udacity Self-Driving Car Nanodegree
+ <p align="center">
+ # Udacity Self-Driving Car Nanodegree
  
  # Capstone Project: Programming a Real Self-Driving Car
  
- ### Team AJJAX
+ ![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
+ 
+ ### We are Team AJJAX !
  Name|Email|GitHub|LinkedIn
  -----------|---------------------------|-------------------------------|------------------------------------------------|
  John Reilly| johnreillymct@outlook.com | https://github.com/john-reilly|https://www.linkedin.com/in/john-reilly-ireland/|
  Joost Aafjes| joostaafjes@gmail.com | https://github.com/joostaafjes | https://www.linkedin.com/in/joost-aafjes-3354a4/ |
  Xing Xing | axingdi@gmail.com | https://github.com/axingdi | https://www.linkedin.com/in/xing-xing-44260965/|
  Adam Gotlib | gotlib.adam@gmail.com> | https://github.com/Goldob | https://www.linkedin.com/in/adam-gotlib/ |
+</p>
 
 
-![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
 
 ### -----------------------------------------
 ### Original Udacity README.MD below
