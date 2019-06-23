@@ -18,7 +18,7 @@ class ColorClassifier:
     def __init__(self):
         self.IMAGE_SIZE = 32
         cwd = os.path.dirname(os.path.realpath(__file__))
-        self.class_model = load_model(cwd + 'models'+ '/model.h5')
+        self.class_model = load_model(cwd + '/models/model.h5')
 
     def predict_image(self, image):
         x = self.crop_image(image)
