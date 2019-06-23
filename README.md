@@ -7,7 +7,7 @@ This is the final "Capstone" Project for the entire 9 month Nanodegree course.
 
 We utilize Robot Operating System (ROS) and Autoware libraries test our code in a simulated environment 
 
-and finally get to run our code on Udacity's famous Self Driving Car "Carla".
+and finally get to run our code on Udacity's famous Self Driving Car *"Carla"*.
 ![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
 ### This is our project submission and we are Team AJJAX !
 
@@ -17,6 +17,13 @@ and finally get to run our code on Udacity's famous Self Driving Car "Carla".
  Joost Aafjes| joostaafjes@gmail.com | https://github.com/joostaafjes | https://www.linkedin.com/in/joost-aafjes-3354a4/ |
  Xing Xing | axingdi@gmail.com | https://github.com/axingdi | https://www.linkedin.com/in/xing-xing-44260965/|
  Adam Gotlib | gotlib.adam@gmail.com> | https://github.com/Goldob | https://www.linkedin.com/in/adam-gotlib/ |
+
+
+## Project Overview
+
+![Overview](README_IMAGES/final-project-ros-graph-v2.png?raw=true "Project Overview")
+
+
 
 
 
