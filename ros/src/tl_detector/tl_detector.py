@@ -239,8 +239,9 @@ class TLDetector(object):
                 diff = d
                 closest_light = light
                 line_wp_idx = temp_wp_idx
-                
-        
+
+        rospy.loginfo('Process traffic lights...')
+
         if closest_light:
             state = self.get_light_state(closest_light)
              #experiment to create test images from https://github.com/swap1712/carnd-capstone/blob/master/ros/src/tl_detector/tl_detector.py
@@ -248,7 +249,7 @@ class TLDetector(object):
             #self.create_training_data(state) # this works!
         
             return line_wp_idx, state
-        return -1, Traffic_Light.UNKNOWN
+        return -1, TrafficLight.UNKNOWN
         # below Original and  not in Walkthrough video
         '''
         if light:
