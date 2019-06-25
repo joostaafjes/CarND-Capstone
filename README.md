@@ -19,11 +19,6 @@ and finally get to run our code on Udacity's famous Self Driving Car *"Carla"*.
  Adam Gotlib | gotlib.adam@gmail.com> | https://github.com/Goldob | https://www.linkedin.com/in/adam-gotlib/ |
 
 
-## Project Overview
-
-![Overview](README_IMAGES/final-project-ros-graph-v2.png?raw=true "Project Overview")
-
-
 
 
 

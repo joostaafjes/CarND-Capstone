@@ -93,5 +93,3 @@ class ObjectClassifier:
 
         return output_images
 
-
-
