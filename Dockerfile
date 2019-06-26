@@ -11,19 +11,19 @@ RUN apt-get update
 # setup rosdep
 RUN sh -c 'echo "yaml http://packages.dataspeedinc.com/ros/ros-public-'$ROS_DISTRO'.yaml '$ROS_DISTRO'" > /etc/ros/rosdep/sources.list.d/30-dataspeed-public-'$ROS_DISTRO'.list'
 RUN rosdep update
-RUN apt-get install -y ros-$ROS_DISTRO-dbw-mkz
-RUN apt-get upgrade -y
+RUN apt-get install -y --allow-unauthenticated ros-$ROS_DISTRO-dbw-mkz
+RUN apt-get upgrade -y --allow-unauthenticated
 # end installing Dataspeed DBW
 
 # install python packages
-RUN apt-get install -y python-pip
+RUN apt-get install -y --allow-unauthenticated python-pip
 COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 
 # install required ros dependencies
-RUN apt-get install -y ros-$ROS_DISTRO-cv-bridge
-RUN apt-get install -y ros-$ROS_DISTRO-pcl-ros
-RUN apt-get install -y ros-$ROS_DISTRO-image-proc
+RUN apt-get install -y --allow-unauthenticated ros-$ROS_DISTRO-cv-bridge
+RUN apt-get install -y --allow-unauthenticated ros-$ROS_DISTRO-pcl-ros
+RUN apt-get install -y --allow-unauthenticated ros-$ROS_DISTRO-image-proc
 
 # socket io
 RUN apt-get install -y netbase

@@ -228,9 +228,15 @@ bool PurePursuit::interpolateNextTarget(int next_waypoint, geometry_msgs::Point 
     }
   }
 }
-
+// Done: IF changed the below finction to always return FALSE in order to make the node constanly update
+// The idea was suggested in the DBW walkthrough video but the code is mine....JR
 bool PurePursuit::verifyFollowing() const
 {
+  // I added return FLASE here to skip the calculations in an attempt to speed up the program and we only want FALSE to be returned anyway so this becomes an "empty" function
+  // this did not make a noticeable difference to the speed problem ,  the car passing out the green dots
+  // experimenting with refresh rate as hinted in video instead
+  return false ; //added by John...yes I know its strange.....
+    
   double a = 0;
   double b = 0;
   double c = 0;
@@ -241,7 +247,9 @@ bool PurePursuit::verifyFollowing() const
   if (displacement < displacement_threshold_ && relative_angle < relative_angle_threshold_)
   {
     // ROS_INFO("Following : True");
-    return true;
+    return true;//original value here .....the easiest way to make it always return FALSE....
+    // TODO: Improve this as now the function is not needed at all?
+    //return false; // I had both options returning false as the easiest way to ensure constant rechecking 
   }
   else
   {

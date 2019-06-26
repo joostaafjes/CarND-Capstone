@@ -1,3 +1,32 @@
+# Udacity Self-Driving Car Nanodegree
+ 
+# Capstone Project: Programming a Real Self-Driving Car
+ 
+ 
+This is the final "Capstone" Project for the entire 9 month Nanodegree course.
+
+We utilize Robot Operating System (ROS) and Autoware libraries test our code in a simulated environment 
+
+and finally get to run our code on Udacity's famous Self Driving Car *"Carla"*.
+![Carla_and_Joe](README_IMAGES/carla_and_Joe.PNG?raw=true "Finally we get to drive the car!")
+### This is our project submission and we are Team AJJAX !
+
+ Name|Email|GitHub|LinkedIn
+ -----------|---------------------------|-------------------------------|------------------------------------------------|
+ John Reilly| johnreillymct@outlook.com | https://github.com/john-reilly|https://www.linkedin.com/in/john-reilly-ireland/|
+ Joost Aafjes| joostaafjes@gmail.com | https://github.com/joostaafjes | https://www.linkedin.com/in/joost-aafjes-3354a4/ |
+ Xing Xing | axingdi@gmail.com | https://github.com/axingdi | https://www.linkedin.com/in/xing-xing-44260965/|
+ Adam Gotlib | gotlib.adam@gmail.com> | https://github.com/Goldob | https://www.linkedin.com/in/adam-gotlib/ |
+
+
+
+
+
+
+### ----------------------------------------------------------------------------------
+### 					Original Udacity README.MD below
+### ----------------------------------------------------------------------------------
+
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
 Please use **one** of the two installation options, either native **or** docker installation.

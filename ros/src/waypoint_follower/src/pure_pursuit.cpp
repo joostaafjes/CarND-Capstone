@@ -29,8 +29,9 @@
 */
 
 #include "pure_pursuit_core.h"
-
-constexpr int LOOP_RATE = 30; //processing frequency
+// this rate and the DBW node are potential what we need to adjust to stop the car passing out the green dots
+// this did not make any noticeable difference going back to orignal value might come back to this
+constexpr int LOOP_RATE = 30 ; // I tried 15 ; // 30 was original value 30; //processing frequency
 
 
 int main(int argc, char **argv)
@@ -51,12 +52,12 @@ int main(int argc, char **argv)
 
   ROS_INFO("set publisher...");
   // publish topic
-  ros::Publisher cmd_velocity_publisher = nh.advertise<geometry_msgs::TwistStamped>("twist_cmd", 10);
+  ros::Publisher cmd_velocity_publisher = nh.advertise<geometry_msgs::TwistStamped>("twist_cmd", 10);//was 10
 
   ROS_INFO("set subscriber...");
   // subscribe topic
   ros::Subscriber waypoint_subscriber =
-      nh.subscribe("final_waypoints", 10, &waypoint_follower::PurePursuit::callbackFromWayPoints, &pp);
+      nh.subscribe("final_waypoints", 10, &waypoint_follower::PurePursuit::callbackFromWayPoints, &pp);//was 10
   ros::Subscriber ndt_subscriber =
       nh.subscribe("current_pose", 10, &waypoint_follower::PurePursuit::callbackFromCurrentPose, &pp);
   ros::Subscriber est_twist_subscriber =
