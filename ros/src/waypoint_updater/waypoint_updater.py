@@ -46,7 +46,9 @@ class WaypointUpdater(object):
         # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
 
 
-        self.final_waypoints_pub        = rospy.Publisher('final_waypoints', Lane, queue_size=1)
+        #OOOOMMMMGGGG was the / the problem!!!! adding / no difference
+        #self.final_waypoints_pub        = rospy.Publisher('final_waypoints', Lane, queue_size=1)
+        self.final_waypoints_pub        = rospy.Publisher('/final_waypoints', Lane, queue_size=1)
 
         #  d other member variables you need below
         self.pose = None
@@ -54,6 +56,8 @@ class WaypointUpdater(object):
         self.base_waypoints =  None
         self.waypoints_2d = None
         self.waypoint_tree = None
+        #I am putting a init messag here....it does not seem to porduce and output
+        rospy.loginfo('In __init__ waypoint' )
         
         self.loop()
         
@@ -72,10 +76,11 @@ class WaypointUpdater(object):
     def get_closest_waypoint_idx(self):#added x here video did not have it
         x = self.pose.pose.position.x
         y = self.pose.pose.position.y
-        if self.waypoint_tree :# i want to see does it exist these lines seem to do nothing think I need special ros log output
-            print("waypoint tree status: exists")  
-        if not self.waypoint_tree :# i want to see does it exist
-            print("waypoint tree status: exists") 
+        #below if statement was early experiment prints not needed....
+        #if self.waypoint_tree :# i want to see does it exist these lines seem to do nothing think I need special ros log output
+        #    print("waypoint tree status: exists")  
+        #if not self.waypoint_tree :# i want to see does it exist
+        #    print("waypoint tree status: exists") 
         
                   
         closest_idx =  self.waypoint_tree.query([x,y], 1 )[1] # was ([x,y], 1 )[1] see below 
@@ -117,14 +122,26 @@ class WaypointUpdater(object):
         #testing what happens without if statement maybe stopline the problem
         # test interesting car stayed forzen swithed to manual drove it a little enaged auto and it stoped so the deceleration part works but not being trigger so problems must be around stopline_wp_idx or fartest_idx
         #lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+        #another test 
+        #self.stopline_wp_idx = Int32(self.stopline_wp_idx)#250 # this was close to the real value I want to see can I force it to stop
+        #self.stopline_wp_idx = 292#similr to real value
         if (self.stopline_wp_idx == -1) or (self.stopline_wp_idx >= farthest_idx):
-            lane.waypoints = base_waypoints
+            lane.waypoints = base_waypoints 
+            #experiment
+            #lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)# I want to see will this cause it to stop
+            
+            #rospy.loginfo('In generate lane if statement:')
+            rospy.loginfo('In generate lane if statement stopline is:{}'.format(self.stopline_wp_idx))
+            
         else:
             lane.waypoints = self.decelerate_waypoints(base_waypoints, closest_idx)
+            #rospy.loginfo('In generate lane else statement:')
+            rospy.loginfo('In generate lane Else statement stopline is:{}'.format(self.stopline_wp_idx))
 
         return lane
 
     def decelerate_waypoints(self, waypoints, closest_idx):
+        rospy.loginfo('In decelerate waypoints stopline:{}'.format(self.stopline_wp_idx))
         temp = []
         for i, wp in enumerate(waypoints):
 
@@ -132,7 +149,13 @@ class WaypointUpdater(object):
             p.pose = wp.pose
 
             # Distance includes a number of waypoints back so front of car stops at line
-            stop_idx = max(self.stopline_wp_idx - closest_idx - STOP_LINE_MARGIN, 0)
+            # thi sline might be suspect so I am rewriting it....# stop_idx = max(self.stopline_wp_idx - closest_idx - STOP_LINE_MARGIN, 0)
+            #john chnaged below added IF
+            if( (self.stopline_wp_idx - closest_idx - STOP_LINE_MARGIN) <= 0 ):
+                stop_idx = 0
+            else: stop_idx = (self.stopline_wp_idx - closest_idx - STOP_LINE_MARGIN)
+                
+            #stop_idx = max(self.stopline_wp_idx - closest_idx - STOP_LINE_MARGIN, 0)
             dist = self.distance(waypoints, i, stop_idx)
             vel = math.sqrt(2 * MAX_DECEL * dist) + (i * CONSTANT_DECEL)
 		   #or try the other way as below
@@ -158,6 +181,7 @@ class WaypointUpdater(object):
 
     def waypoints_cb(self, waypoints):
         # TODO: Implement
+        rospy.loginfo('In waypoints_cb :')
         self.base_waypoints = waypoints
         if not self.waypoints_2d:
             self.waypoints_2d = [ [ waypoint.pose.pose.position.x , waypoint.pose.pose.position.y] for waypoint in waypoints.waypoints ]
@@ -168,7 +192,9 @@ class WaypointUpdater(object):
         # TODO: Callback for /traffic_waypoint message. Implement
         # pass
         #From John next line added to get a value for self.stopline_wp_idx from /traffic_waypoint 
-        self.stopline_wp_idx = msg.data
+        self.stopline_wp_idx = msg.data #taking out data as experiment#putting it back in again much later re msg Int32 error
+        rospy.loginfo('In traffic_cb self.stopline_wp_idx is : {}'.format(self.stopline_wp_idx) )
+        #rospy.loginfo('Color pred {} with prob {}'.format(pred, prob))
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later

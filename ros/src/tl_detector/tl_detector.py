@@ -19,7 +19,7 @@ from scipy.spatial import KDTree#added for KDtree same as waypoint_updater
 # added for KDtree part in looking forward
 import numpy as np
 
-STATE_COUNT_THRESHOLD = 3# lower number did not imporve performace 1# 0 zero here made no difference # 3 test simulator may not work on normal values here??
+STATE_COUNT_THRESHOLD = 1#dropping again as test for not reacting to red....3# lower number did not imporve performace 1# 0 zero here made no difference # 3 test simulator may not work on normal values here??
 
 class TLDetector(object):
     def __init__(self):
@@ -135,8 +135,12 @@ class TLDetector(object):
             light_wp = light_wp if state == TrafficLight.RED else -1
             self.last_wp = light_wp
             self.upcoming_red_light_pub.publish(Int32(light_wp))
+            
+            
+            rospy.loginfo('In tl_detector elif section light_wp:{}'.format(Int32(self.last_wp) ) )
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
+            rospy.loginfo('In tl_detector else section last_wp:{}'.format( Int32(self.last_wp) ) )
         self.state_count += 1
 
     def get_closest_waypoint(self, x,y):# original was ... pose):
@@ -153,8 +157,12 @@ class TLDetector(object):
         #todo more... I think this needs more to make it closest waypoint AHEAD of car as there is a possibility if returnsing the traffic lights behind the car.....on second thoughts that might not be needed....made no difference to "site"
 
         closest_idx =  self.waypoint_tree.query([x,y], 1 )[1] # was ([x,y], 1 )[1] see below
+#
+#
+#2 july maybe this ahead part is breaking it?? will remove as tesst#
 
         # I am going to copy this into tl_detector which is already slecting nearest waypoint but not nessecarily ahead waypoint might be causeing problems...John
+        '''
         closest_coord = self.waypoints_2d[closest_idx]
         prev_coord = self.waypoints_2d[closest_idx -  1]
 
@@ -167,7 +175,7 @@ class TLDetector(object):
 
         if val > 0:
             closest_idx = (closest_idx + 1) % len(self.waypoints_2d)
-
+        '''
         return closest_idx #0
 
     def get_light_state(self, light):

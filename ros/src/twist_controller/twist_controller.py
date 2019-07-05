@@ -31,13 +31,14 @@ class Controller(object):
 #File "/home/workspace/CarND-Capstone/ros/src/twist_controller/twist_controller.py", line 10, in __init__
 #    self.yaw_controller = YawController(wheel_base,steer_ratio, 0.1, max_lat_accel,max_steer_angle)
 #NameError: global name 'YawController' is not defined
+    #0.1,.01 and .01 gives good throttle but keeps going at end of loop
     
-    
-        kp = 1.0 #0.3#5.0#1.0#0.1#5#2.0# 0.3
-        ki = 1.0 #0.1#0.5#1.0#0.1 #0.5 #0.4 # 0.1 # had k1 here mistake
-        kd = 1.0# 0.0# 0.5# 1.0#0.1# 0.5 #0.5# 0.1 # 0.1 # 0. # ?? this is how it is in Q+A
+        kp =0.1#0.05#1.0# 1.0#0.7#0.2#0.7##1.0 #0.3#5.0#1.0#0.1#5#2.0# 0.3
+        ki = 0.0005#0.005#0.01#0.3#0.1#0.1#1.0 #0.1#0.5#1.0#0.1 #0.5 #0.4 # 0.1 # had k1 here mistake
+        kd = 0.005#0.0050#0.01#0.7#1.0# 0.0# 0.5# 1.0#0.1# 0.5 #0.5# 0.1 # 0.1 # 0. # ?? this is how it is in Q+A
         mn = 0#0.01 # 0. # Minimum throttle value ### ?? this is how it is in Q+A
-        mx = 1.0 # evern as low as 0.05 did not fix the lag from camera on 0.05 #experiemnt using max throttle to limit speed to overcome lag with camera on 1.0#was 0.2 # Maximum throttle value
+        mx = 1.0#0.3#1.0 # evern as low as 0.05 did not fix the lag from camera on 0.05 #experiemnt using max throttle to limit speed to overcome lag with camera on 1.0#was 0.2 # Maximum throttle value
+        #at 0.2 it got stuck in site sim! at PID = 1.0
         #self.throttle_controller = PID(kp, ki, mn, mx)
         self.throttle_controller = PID(kp, ki,kd, mn, mx)#kd was missing....
         # I am going to commment the LPF out as it may be casueing trouble 
