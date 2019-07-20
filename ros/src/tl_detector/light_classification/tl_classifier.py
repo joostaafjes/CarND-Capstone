@@ -46,7 +46,8 @@ class TLClassifier(object):
         # eventually this gets passed back to tl_detector and is a singluar state maybe this sia problem?
         traffic_light_color = self.color_classifier.predict_images(traffic_light_images)
 
-        rospy.loginfo('Traffic light detected {}'.format(traffic_light_color))
+        tf_color = ['RED', 'YELLOW', 'GREEN', 'UNDEFINED', 'UNKNOWN'] # Not so nice ;-( but want to show text
+        rospy.loginfo('Traffic light detected {}'.format(tf_color[traffic_light_color]))
         #changed bacue now using styx msg #TrafficLight(traffic_light_color)))
 
         return traffic_light_color
