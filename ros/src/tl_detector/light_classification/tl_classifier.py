@@ -13,13 +13,21 @@ from styx_msgs.msg import TrafficLight
 import rospy
 
 class TLClassifier(object):
-    def __init__(self):
+    #john  added boolean is_site to indicate site or sim classifer to load
+    def __init__(self, is_site): 
         # init object classifier (step 1)
         rospy.loginfo('TLClassifier start inititialization')
         self.object_classifier = ObjectClassifier()
 
         # init traffic light color classifier (step 2)
-        self.color_classifier = ColorClassifier()
+        #john added is_site log output 
+        if is_site:
+            rospy.loginfo('is_site TRUE using site classifer')
+        else :
+            rospy.loginfo('is_site FALSE using sim classifer')
+            
+        self.color_classifier = ColorClassifier(is_site)#john ...now sending boolena to color classifier
+        
         rospy.loginfo('TLClassifier inititialized')
 
     def get_classification(self, image):

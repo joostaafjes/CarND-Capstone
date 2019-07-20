@@ -10,10 +10,16 @@ import tensorflow as tf
 from styx_msgs.msg import TrafficLight # for traffic light colour values
 
 class ColorClassifier:
-    def __init__(self):
+    def __init__(self, is_site):
         self.IMAGE_SIZE = 32
         cwd = os.path.dirname(os.path.realpath(__file__))
-        self.class_model = load_model(cwd + '/models/model.h5')
+        #john added is_site part below
+        if is_site:
+            self.class_model = load_model(cwd + '/models/model_site.h5')
+        else:
+              self.class_model = load_model(cwd + '/models/model.h5')
+              #self.class_model = load_model(cwd + '/models/model_sim.h5')
+            
         self.class_graph = tf.get_default_graph()
 
     def predict_image(self, image):

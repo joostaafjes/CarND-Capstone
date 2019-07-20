@@ -53,11 +53,13 @@ class TLDetector(object):
 
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
+        #john adding site or sim boolean as suggested in section 9 of classroom
+        self.is_site = self.config['is_site'] # this gets sent to the classifier below
 
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
+        self.light_classifier = TLClassifier(self.is_site)#adding is_site boolean from above
         self.listener = tf.TransformListener()
 
         self.state = TrafficLight.UNKNOWN
@@ -117,6 +119,13 @@ class TLDetector(object):
         #elif self.count == self.frame_sample_rate :
         #    self.count = 0 #reset the counter and continue
         #END of JOHN's addition
+        #############
+        #John is adding a part here to deal with the error in the second submission, which was some errors thrown after the image_cb was woprking but before the tl_classifier was initialiasted. In the site this was several errors that seemed to have little effect but we want to deal with them anyway
+        
+        if not self.light_classifier :
+            return
+        ##end of extra return section ....John
+        
         self.has_image = True
         self.camera_image = msg
         light_wp, state = self.process_traffic_lights()
