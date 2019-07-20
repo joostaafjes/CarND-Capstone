@@ -31,6 +31,7 @@ class TLDetector(object):
         self.lights = []
         self.light_classifier = None # Init here because TLClassifier constructor takes a long time
 
+        # set to True, if you want to use the simulator traffic light color (only for testing)
         self.USE_SIMULATOR_TRAFFIC_LIGHT_COLOR = False
 
         #from waypoint_updater to make similar KDtree
