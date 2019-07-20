@@ -29,6 +29,9 @@ class TLDetector(object):
         self.waypoints = None
         self.camera_image = None
         self.lights = []
+        self.light_classifier = None # Init here because TLClassifier constructor takes a long time
+
+        self.USE_SIMULATOR_TRAFFIC_LIGHT_COLOR = False
 
         #from waypoint_updater to make similar KDtree
         self.waypoints_2d = None
@@ -260,7 +263,11 @@ class TLDetector(object):
         rospy.loginfo('Process traffic lights...')
 
         if closest_light:
-            state = self.get_light_state(closest_light)
+            if self.USE_SIMULATOR_TRAFFIC_LIGHT_COLOR:
+                state = closest_light.state  # from simulator
+                rospy.loginfo('State from simulator:{}'.format(state))
+            else:
+                state = self.get_light_state(closest_light) # from image
              #experiment to create test images from https://github.com/swap1712/carnd-capstone/blob/master/ros/src/tl_detector/tl_detector.py
             #this exerpiemnt to create traiing data works and might be used if we need it
             #self.create_training_data(state) # this works!
