@@ -75,14 +75,21 @@ class ObjectClassifier:
         output_images = []
         for i in range(len(boxes)):
             confidence = float(scores[i])
-            if confidence >= self.DETECTION_THRESHOLD and classes[i] == self.OBJECT_DETECTION_TRAFFIC_LIGHT_CLASS:
+            ymin, xmin, ymax, xmax = tuple(boxes[i].tolist())
+            ymin = int(ymin * height)
+            ymax = int(ymax * height)
+            xmin = int(xmin * width)
+            xmax = int(xmax * width)
+            box_width = xmax - xmin
+            box_height = ymax - ymin
+            box_ratio = float(box_height) / box_width
+            if confidence >= self.DETECTION_THRESHOLD and \
+               classes[i] == self.OBJECT_DETECTION_TRAFFIC_LIGHT_CLASS and \
+               box_width > 21 and \
+               box_height > 20 and \
+               box_ratio > 1.5:
                 tf_boxes.append(boxes[i])
-                confidence = float(scores[i])
-                ymin, xmin, ymax, xmax = tuple(boxes[i].tolist())
-                ymin = int(ymin * height)
-                ymax = int(ymax * height)
-                xmin = int(xmin * width)
-                xmax = int(xmax * width)
+                rospy.loginfo('Bouding box detected: {} {} {} {}'.format(xmin, xmax, ymin, ymax))
                 rospy.loginfo('Bouding box detected: {} {} {} {}'.format(xmin, xmax, ymin, ymax))
                 #
                 # extract cropped image from bounding box
